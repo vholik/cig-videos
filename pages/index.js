@@ -6,7 +6,7 @@ import { GraphQLClient, gql } from "graphql-request";
 import { useEffect, useState } from "react";
 
 const graphcms = new GraphQLClient(
-  "https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clagr3b8e1nt201un742p9971/master"
+  "https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clagxfn6307ti01tc6taifzx3/master"
 );
 
 const QUERY_VIDEOS = gql`
@@ -59,9 +59,12 @@ export default function Home() {
   async function fetchVideo() {
     const { videos } = await graphcms.request(QUERY_VIDEOS);
     const { actors } = await graphcms.request(QUERY_ACTORS);
+    console.log(videos);
     setVideos(videos);
     setActors(actors);
-    setCurrentActor(actors[0].name);
+    if (actors[0].name) {
+      setCurrentActor(actors[0].name);
+    }
   }
 
   useEffect(() => {
