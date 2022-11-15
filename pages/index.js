@@ -110,13 +110,21 @@ export default function Home() {
       <div className="videos">
         {currentVideos.map((video) => (
           <div className="video" key={video.id}>
-            <Image
+            {/* <Image
               src={video.image.url}
               width={350}
               height={200}
               alt="Video"
               style={{ objectFit: "cover" }}
-            />
+            /> */}
+            <video
+              autoPlay
+              loop
+              style={{ width: "350px", height: "200px" }}
+              controls
+            >
+              <source src={video.image.url} />
+            </video>
             <h2 className="name">{video.videoName}</h2>
             <p className="count">{video.views} Wyświetlenia</p>
             <p className="date">Dodano {video.date}</p>
