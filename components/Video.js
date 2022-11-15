@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default function Video({ currentVideo, setModal }) {
+function Video({ currentVideo, setModal }) {
   return (
     <StyledVideo onClick={() => setModal(false)}>
       <video controls autoPlay onClick={(e) => e.stopPropagation()}>
@@ -9,6 +9,8 @@ export default function Video({ currentVideo, setModal }) {
     </StyledVideo>
   );
 }
+
+export default Video;
 
 const StyledVideo = styled.div`
   position: fixed;

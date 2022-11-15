@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import { GraphQLClient, gql } from "graphql-request";
 import { useEffect, useState } from "react";
-import Video from "./Video";
+import Video from "../components/Video";
 
 const graphcms = new GraphQLClient(
   "https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clagxfn6307ti01tc6taifzx3/master"
