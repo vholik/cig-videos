@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import { GraphQLClient, gql } from "graphql-request";
 import { useEffect, useState } from "react";
+import Video from "./Video";
 
 const graphcms = new GraphQLClient(
   "https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clagxfn6307ti01tc6taifzx3/master"
@@ -11,7 +12,7 @@ const graphcms = new GraphQLClient(
 
 const QUERY_VIDEOS = gql`
   {
-    videos {
+    videos(first: 100) {
       actor {
         name
         image {
@@ -31,7 +32,7 @@ const QUERY_VIDEOS = gql`
 
 const QUERY_ACTORS = gql`
   {
-    actors {
+    actors(first: 100) {
       name
       id
       image {
@@ -41,25 +42,18 @@ const QUERY_ACTORS = gql`
   }
 `;
 
-// export async function getServerSideProps() {
-//   const { videos } = await graphcms.request(QUERY);
-//   return {
-//     props: {
-//       videos,
-//     },
-//   };
-// }
-
 export default function Home() {
   const [videos, setVideos] = useState([]);
   const [currentVideos, setCurrentVideos] = useState([]);
   const [currentActor, setCurrentActor] = useState("");
   const [actors, setActors] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(null);
 
   async function fetchVideo() {
     const { videos } = await graphcms.request(QUERY_VIDEOS);
     const { actors } = await graphcms.request(QUERY_ACTORS);
-    console.log(videos);
+    console.log(actors);
     setVideos(videos);
     setActors(actors);
     if (actors[0].name) {
@@ -77,6 +71,11 @@ export default function Home() {
     );
   }, [currentActor]);
 
+  const playVideo = (url) => {
+    setModal(true);
+    setCurrentVideo(url);
+  };
+
   return (
     <StyledHome>
       <Head>
@@ -85,6 +84,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
+      {modal && <Video currentVideo={currentVideo} setModal={setModal} />}
       <div className="sidebar">
         <h1 className="title">Dziewczyny:</h1>
         {actors.map((actor) => (
@@ -110,18 +110,9 @@ export default function Home() {
       <div className="videos">
         {currentVideos.map((video) => (
           <div className="video" key={video.id}>
-            {/* <Image
-              src={video.image.url}
-              width={350}
-              height={200}
-              alt="Video"
-              style={{ objectFit: "cover" }}
-            /> */}
             <video
-              autoPlay
-              loop
               style={{ width: "350px", height: "200px" }}
-              controls
+              onClick={() => playVideo(video.image.url)}
             >
               <source src={video.image.url} />
             </video>
@@ -175,8 +166,10 @@ const StyledHome = styled.div`
     height: 100%;
     top: 89px;
     width: 300px;
+    overflow-y: scroll;
     padding: 40px 100px 0 25px;
     background-color: #1f1f23;
+    padding-bottom: 120px;
     .title {
       font-weight: 500;
       font-size: 16px;
