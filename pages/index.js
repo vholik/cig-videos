@@ -15,6 +15,7 @@ const QUERY_VIDEOS = gql`
     videos(first: 100) {
       actor {
         name
+        id
         image {
           url
         }
@@ -51,11 +52,11 @@ export default function Home() {
   const [currentVideo, setCurrentVideo] = useState(null);
 
   async function fetchVideo() {
-    const { videos } = await graphcms.request(QUERY_VIDEOS);
     const { actors } = await graphcms.request(QUERY_ACTORS);
-    console.log(actors);
+    const { videos } = await graphcms.request(QUERY_VIDEOS);
     setVideos(videos);
     setActors(actors);
+
     if (actors[0].name) {
       setCurrentActor(actors[0].name);
     }
@@ -96,8 +97,8 @@ export default function Home() {
             <div className="photo">
               <Image
                 src={actor.image.url}
-                width={50}
-                height={50}
+                width={40}
+                height={40}
                 className="photo"
                 alt="Photo"
                 style={{ objectFit: "cover" }}
@@ -183,8 +184,8 @@ const StyledHome = styled.div`
       cursor: pointer;
       transition: opacity 0.2s linear;
       .photo {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
       }
       .actor-name {
